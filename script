@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Define the base structure
+base_structure=(
+  "terraform/environments/dev"
+  "terraform/environments/staging"
+  "terraform/environments/prod"
+  "terraform/modules/networking"
+  "terraform/modules/eks"
+  "terraform/modules/ec2"
+  "terraform/modules/rds"
+  "terraform/modules/elasticache"
+  "terraform/modules/s3"
+  "terraform/modules/security"
+  "terraform/scripts"
+  "terraform/config"
+)
+
+# Define files for each environment
+env_files=("main.tf" "variables.tf" "terraform.tfvars" "providers.tf" "backend.tf" "outputs.tf")
+
+# Define files for each module
+module_files=("main.tf" "variables.tf" "outputs.tf")
+
+# Create the base structure
+for dir in "${base_structure[@]}"; do
+  mkdir -p "$dir"
+done
+
+# Populate environment folders with files
+for env in dev staging prod; do
+  for file in "${env_files[@]}"; do
+    touch "terraform/environments/$env/$file"
+  done
+done
+
+# Populate module folders with files
+for module in networking eks ec2 rds elasticache s3 security; do
+  for file in "${module_files[@]}"; do
+    touch "terraform/modules/$module/$file"
+  done
+done
+
+# Create specific files in the scripts and config directories
+touch terraform/scripts/init-backend.sh
+touch terraform/scripts/plan-all.sh
+touch terraform/scripts/apply-all.sh
+
+touch terraform/config/dev.tfvars
+touch terraform/config/staging.tfvars
+touch terraform/config/prod.tfvars
+
+echo "Terraform folder structure created successfully!"
+
